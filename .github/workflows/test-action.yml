@@ -1,7 +1,9 @@
 name: Test Action 
 
-# test on push the action ignores request. 
-on: [pull_request, push]
+on:
+  push: # test on push the action ignores request. 
+  pull_request: # test that we can edit the PR title to re-run the action
+    types: [opened, reopened, edited]
 
 jobs:
   test:
