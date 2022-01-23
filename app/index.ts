@@ -4,6 +4,8 @@ import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
 ;(async () => {
+  log.debug("Checking if action was triggered by a PR")
+
   if (githubContext.eventName != "pull_request") {
     log.info(
       "GitHub Action workflow trigger is not a pull_request. Nothing for me to do. I'll just exit."
@@ -11,6 +13,7 @@ import * as log from "./log"
     return terminate()
   }
 
+  log.debug("Getting input from action")
   const input = getInput()
   const inputError = validateInput(input)
   if (inputError) {
@@ -24,6 +27,7 @@ import * as log from "./log"
     )
     return terminate()
   }
+  log.debug(`Action running against PR ${prNumber}`)
 
   const octokit = getOctokit(input.token)
   const pullRequest = await octokit.rest.pulls.get({
@@ -32,6 +36,7 @@ import * as log from "./log"
     pull_number: prNumber
   })
 
+  log.debug(`PR: ${JSON.stringify(pullRequest.data)}`)
   const prTitle = pullRequest.data.title
 
   const isTitleValid = await lintPrTitle(prTitle, input.rules)
