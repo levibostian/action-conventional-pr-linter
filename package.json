@@ -6,7 +6,7 @@
     "test": "npx jest",
     "format": "npx prettier --write \"{app,tests}/**/*.ts\"",
     "lint": "npx eslint --fix --ext ts,js . && npx tsc --noEmit",
-    "compile": "npx ncc build app/index.ts -o dist",
+    "compile": "npx ncc build app/index.ts --source-map -o dist",
     "prepare": "husky install"
   },
   "repository": {
