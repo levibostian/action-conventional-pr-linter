@@ -3,6 +3,17 @@ import * as core from "@actions/core"
 
 export const getInput = (): Input => {
   return {
-    text: core.getInput("text")
+    rules: core.getInput("rules"),
+    token: core.getInput("token")
   }
+}
+
+export const validateInput = (input: Input): Error | null => {
+  const validRulesSets = ["angular", "conventional"]
+
+  if (!validRulesSets.includes(input.rules)) {
+    return new Error(`Rules needs to be one of: ${validRulesSets}. Given: ${input.rules}.`)
+  }
+
+  return null
 }
