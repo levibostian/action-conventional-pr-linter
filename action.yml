@@ -1,14 +1,17 @@
-name: "Action Node Blanky"
-description: "An action that doesn't really do anything. Just a boilerplate template."
+name: "Semantic PR"
+description: "Helps ensure that pull requests will be merged and creates the desired outcome of semantic-release. "
 author: "levibostian"
-inputs: # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-  text:
-    description: "Text to output in the action, prepended by Text:"
-    default: "yo"
+inputs: 
+  rules:
+    description: "commitlint rules set to follow. Name for file path or npm module name of installed module. Default: @commitlint/config-conventional"
+    default: "@commitlint/config-conventional"
+    required: true
+  token:
+    description: "GitHub personal access token for user who has the ability to comment on pull requests."
     required: true
 runs:
   using: "node16"
   main: "dist/index.js"
 branding:
-  icon: 'award'  
+  icon: 'check'  
   color: 'green'

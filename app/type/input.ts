@@ -1,3 +1,4 @@
 export interface Input {
-  text: string
+  rules: string
+  token: string
 }
