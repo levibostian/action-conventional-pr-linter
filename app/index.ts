@@ -1,4 +1,4 @@
-import { getInput, validateInput } from "./input"
+import { getInput } from "./input"
 import { lintPrTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
@@ -13,13 +13,8 @@ import * as log from "./log"
     return terminate()
   }
 
-  log.debug("Getting input from action")
+  log.debug("Getting input and context from action")
   const input = getInput()
-  const inputError = validateInput(input)
-  if (inputError) {
-    return terminate(inputError)
-  }
-
   const prNumber = githubContext.payload.pull_request?.number
   if (!prNumber) {
     log.info(
@@ -36,12 +31,12 @@ import * as log from "./log"
     pull_number: prNumber
   })
 
-  log.debug(`PR: ${JSON.stringify(pullRequest.data)}`)
+  log.debug(`GitHub pull request: ${JSON.stringify(pullRequest.data)}`)
   const prTitle = pullRequest.data.title
 
   const isTitleValid = await lintPrTitle(prTitle, input.rules)
   if (!isTitleValid) {
-    return terminate(new Error("PR title is not valid."))
+    return terminate(new Error("Pull request title is not valid."))
   }
 
   log.info("Looks like the PR title is valid!")

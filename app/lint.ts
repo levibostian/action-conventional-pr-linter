@@ -1,27 +1,35 @@
 import lint from "@commitlint/lint"
-import { QualifiedRules } from "@commitlint/types"
-import angularRules from "@commitlint/config-angular"
-import conventionalRules from "@commitlint/config-conventional"
+import { LintOptions, ParserOptions, QualifiedConfig } from "@commitlint/types"
+import load from "@commitlint/load"
 import * as log from "./log"
 
-export const lintPrTitle = async (title: string, rules: string): Promise<boolean> => {
-  let rulesSet: QualifiedRules | undefined = undefined
+export const lintPrTitle = async (title: string, rulesName: string): Promise<boolean> => {
+  title = title.trim()
+  if (title == "") return false
 
-  if (rules == "angular") {
-    log.debug("Using angular rules for linting")
-    rulesSet = angularRules.rules
-  }
-  if (rules == "conventional") {
-    log.debug("Using conventional rules for linting")
-    rulesSet = conventionalRules.rules
-  }
+  log.debug(`Linting PR ${title} with rules: ${rulesName}`)
 
-  if (rulesSet == undefined) {
-    log.debug(`Looks like rules set not defined or invalid. Given ${rules}`)
+  // Using load() to get more accurate rules sets such as ! for breaking changes.
+  // https://github.com/conventional-changelog/commitlint/issues/2226#issuecomment-777207848
+  let loadedRules: QualifiedConfig | undefined
+  try {
+    // load throws if can't find the rules to load
+    loadedRules = await load({
+      extends: [rulesName]
+    })
+  } catch {
     return false
   }
 
-  const lintResult = await lint(title, rulesSet)
+  if (!loadedRules || !loadedRules.parserPreset) {
+    log.error(`Rules set ${rulesName} not able to be loaded. Not able to lint PR title without it.`)
+    return false
+  }
+  const opts: LintOptions = {
+    parserOpts: loadedRules.parserPreset.parserOpts as ParserOptions
+  }
+  const lintResult = await lint(title, loadedRules.rules, opts)
+
   log.debug(`Linting result: ${JSON.stringify(lintResult)}`)
 
   return lintResult.valid

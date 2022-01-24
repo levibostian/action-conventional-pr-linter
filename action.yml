@@ -3,8 +3,8 @@ description: "Helps ensure that pull requests will be merged and creates the des
 author: "levibostian"
 inputs: 
   rules:
-    description: "Conventional commits rules set to follow. Options: angular, conventional. Default: angular"
-    default: "angular"
+    description: "commitlint rules set to follow. Name for file path or npm module name of installed module. Default: @commitlint/config-conventional"
+    default: "@commitlint/config-conventional"
     required: true
   token:
     description: "GitHub personal access token for user who has the ability to comment on pull requests."
