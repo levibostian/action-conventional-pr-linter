@@ -3,6 +3,8 @@ import { lintPrTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
+import cathy from "cathy"
+import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages"
 ;(async () => {
   log.debug("Checking if action was triggered by a PR")
 
@@ -33,11 +35,28 @@ import * as log from "./log"
 
   log.debug(`GitHub pull request: ${JSON.stringify(pullRequest.data)}`)
   const prTitle = pullRequest.data.title
+  const prAuthor = pullRequest.data.user?.login || ""
 
   const isTitleValid = await lintPrTitle(prTitle, input.rules)
   if (!isTitleValid) {
+    await cathy.speak(getInvalidPrTitleHelp(prAuthor), {
+      githubToken: input.token,
+      githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+      githubIssue: prNumber,
+      updateExisting: true,
+      updateID: "action-semantic-pr_help-pr-title"
+    })
+
     return terminate(new Error("Pull request title is not valid."))
   }
+
+  await cathy.speak(getValidPrTitleMessage(prAuthor), {
+    githubToken: input.token,
+    githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+    githubIssue: prNumber,
+    updateExisting: true,
+    updateID: "action-semantic-pr_help-pr-title"
+  })
 
   log.info("Looks like the PR title is valid!")
   terminate()
