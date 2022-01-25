@@ -3,7 +3,7 @@ import { lintPrTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
-import cathy from "cathy"
+import * as cathy from "cathy"
 import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages"
 ;(async () => {
   log.debug("Checking if action was triggered by a PR")
