@@ -65,6 +65,47 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
   )
 
   log.info("Looks like the PR title is valid!")
+
+  // time to merge if we determine it's ready.
+
+  if (pullRequest.data.merged || pullRequest.data.closed_at) {
+    log.info("Pull request is not open. Nothing else for me to do, existing.")
+    return terminate()
+  }
+
+  // check labels to see if it's ready to be merged
+  let isReadyToMerge = false
+  pullRequest.data.labels.forEach((label) => {
+    if (label.name == "Ready to merge") {
+      isReadyToMerge = true
+    }
+  })
+
+  if (!isReadyToMerge) {
+    log.info("PR title valid, but not ready to merge. Nothing else for me to do, exiting.")
+    return terminate()
+  }
+
+  log.info("Merging PR")
+  await octokit.rest.pulls.merge({
+    owner: githubContext.repo.owner,
+    repo: githubContext.repo.repo,
+    pull_number: prNumber,
+    commit_title: prTitle,
+    commit_message: "", // in the future, we can populate this with breaking changes.
+    merge_method: "squash"
+  })
+  await octokit.rest.issues.addLabels({
+    owner: githubContext.repo.owner,
+    repo: githubContext.repo.repo,
+    issue_number: prNumber,
+    labels: [
+      {
+        name: "Merged by action-semantic-pr"
+      }
+    ]
+  })
+
   terminate()
 })()
 

@@ -3,7 +3,7 @@ name: Test Action
 on:
   push: # test on push the action ignores request. 
   pull_request: # test that we can edit the PR title to re-run the action
-    types: [opened, reopened, edited, synchronize]
+    types: [opened, reopened, edited, synchronize, labeled]
 
 jobs:
   test:
