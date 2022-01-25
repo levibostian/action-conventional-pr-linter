@@ -9,6 +9,9 @@ inputs:
   token:
     description: "GitHub personal access token for user who has the ability to comment on pull requests."
     required: true
+  invalidPrTitleMessagePath:
+    description: "Relative path to file containing message to send on pull request when pull request title is invalid."
+    required: false 
 runs:
   using: "node16"
   main: "dist/index.js"
