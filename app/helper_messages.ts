@@ -11,13 +11,13 @@ const getMessage = (author: string, relativeFilePath: string): string => {
 }
 
 export const getInvalidPrTitleHelp = (author: string, options?: { filePath?: string }): string => {
-  const filePath = options?.filePath || "invalid_pr_title_help.md"
+  const filePath = options?.filePath || "assets/invalid_pr_title_help.md"
 
   return getMessage(author, filePath)
 }
 
 export const getValidPrTitleMessage = (author: string, options?: { filePath?: string }): string => {
-  const filePath = options?.filePath || "valid_pr_title.md"
+  const filePath = options?.filePath || "assets/valid_pr_title.md"
 
   return getMessage(author, filePath)
 }
