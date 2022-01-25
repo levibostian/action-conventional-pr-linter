@@ -99,11 +99,7 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     issue_number: prNumber,
-    labels: [
-      {
-        name: "Merged by action-semantic-pr"
-      }
-    ]
+    labels: ["Merged by action-semantic-pr"]
   })
 
   terminate()
