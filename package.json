@@ -1,7 +1,6 @@
 {
-  "name": "@levibostian/action-node-blanky",
+  "name": "@levibostian/action-semantic-pr",
   "version": "0.1.0",
-  "description": "replace me",
   "scripts": {
     "test": "npx jest",
     "format": "npx prettier --write \"{app,tests}/**/*.ts\"",
@@ -9,19 +8,7 @@
     "compile": "rm -rf dist/ && npx ncc build app/index.ts --source-map -o dist && cp -r app/assets/ dist/assets/",
     "prepare": "husky install"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/levibostian/action-node-blanky.git"
-  },
-  "keywords": [
-    "boilerplate"
-  ],
-  "author": "Levi Bostian <levi@levi.earth>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/levibostian/action-node-blanky/issues"
-  },
-  "homepage": "https://github.com/levibostian/action-node-blanky#readme",
   "lint-staged": {
     "*.{ts,js,json,css,md}": [
       "npm run format"
