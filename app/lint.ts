@@ -2,6 +2,8 @@ import lint from "@commitlint/lint"
 import { LintOptions, ParserOptions, QualifiedConfig } from "@commitlint/types"
 import load from "@commitlint/load"
 import * as log from "./log"
+import { ReleaseType } from "./type/release_type"
+import commitAnalyzer from "@semantic-release/commit-analyzer"
 
 export const lintPrTitle = async (title: string, rulesName?: string): Promise<boolean> => {
   title = title.trim()
@@ -35,4 +37,18 @@ export const lintPrTitle = async (title: string, rulesName?: string): Promise<bo
   log.debug(`Linting result: ${JSON.stringify(lintResult)}`)
 
   return lintResult.valid
+}
+
+export const getNextReleaseType = async (prTitle: string): Promise<ReleaseType> => {
+  const result: ReleaseType = await commitAnalyzer.analyzeCommits(
+    {
+      preset: "conventionalcommits"
+    },
+    {
+      commits: [{ message: prTitle, hash: "XXX" }],
+      logger: console
+    }
+  )
+
+  return result
 }

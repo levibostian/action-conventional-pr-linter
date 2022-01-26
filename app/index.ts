@@ -1,5 +1,5 @@
 import { getInput } from "./input"
-import { lintPrTitle } from "./lint"
+import { getNextReleaseType, lintPrTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
@@ -39,24 +39,39 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
 
   const isTitleValid = await lintPrTitle(prTitle, "@commitlint/config-conventional")
   if (!isTitleValid) {
-    await cathy.speak(getInvalidPrTitleHelp(prAuthor), {
+    await cathy.speak(
+      getInvalidPrTitleHelp({
+        author: prAuthor
+      }),
+      {
+        githubToken: input.token,
+        githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+        githubIssue: prNumber,
+        updateExisting: true,
+        updateID: "action-semantic-pr_help-pr-title"
+      }
+    )
+
+    return terminate(new Error("Pull request title is not valid."))
+  }
+
+  const nextReleaseType = await getNextReleaseType(prTitle)
+  const willCauseRelease = nextReleaseType != undefined
+
+  await cathy.speak(
+    getValidPrTitleMessage({
+      author: prAuthor,
+      willCauseRelease,
+      nextReleaseType
+    }),
+    {
       githubToken: input.token,
       githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
       githubIssue: prNumber,
       updateExisting: true,
       updateID: "action-semantic-pr_help-pr-title"
-    })
-
-    return terminate(new Error("Pull request title is not valid."))
-  }
-
-  await cathy.speak(getValidPrTitleMessage(prAuthor), {
-    githubToken: input.token,
-    githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
-    githubIssue: prNumber,
-    updateExisting: true,
-    updateID: "action-semantic-pr_help-pr-title"
-  })
+    }
+  )
 
   log.info("Looks like the PR title is valid!")
 
