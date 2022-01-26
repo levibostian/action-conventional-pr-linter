@@ -8,6 +8,12 @@ This pull request title should be in this format:
 <type>: short description of change being made
 ```
 
+**If your pull request introduces breaking changes** to the code, use this format:
+
+```
+<type>!: short description of breaking change
+```
+
 where `<type>` is one of the following:
 
 - `feat:` - A new feature is being added by this pull request.
@@ -24,14 +30,12 @@ where `<type>` is one of the following:
 - `chore:` - Other changes to project that don't modify source code or test files.
 - `revert:` - Reverts a previous commit that was made.
 
-**If your pull request causes breaking changes** to the code base, you need to add a `!` after the `<type>`: `feat!: remove deprecated v1 endpoints`
-
 <details>
 <summary>Examples</summary>
 <br>
 ```
 feat: edit profile photo
-feat!: remove deprecated v1 endpoints
+refactor!: remove deprecated v1 endpoints
 build: update npm dependencies
 style: run formatter 
 ```
@@ -39,4 +43,4 @@ style: run formatter
 
 Need more examples? Want to learn more about this format? [Check out the official docs](https://www.conventionalcommits.org/).
 
-**Note:** If your pull request does multiple things such as adding a feature _and_ makes changes to the CI server _and_ fixes some bugs then you might want to consider splitting this pull request up into multiple smaller pull requests. Small and focused pull requests are preferred by the reviewers of the code.
+**Note:** If your pull request does multiple things such as adding a feature _and_ makes changes to the CI server _and_ fixes some bugs then you might want to consider splitting this pull request up into multiple smaller pull requests.

@@ -2,16 +2,9 @@ name: "Semantic PR"
 description: "Helps ensure that pull requests will be merged and creates the desired outcome of semantic-release. "
 author: "levibostian"
 inputs: 
-  rules:
-    description: "commitlint rules set to follow. Name for file path or npm module name of installed module. Default: @commitlint/config-conventional"
-    default: "@commitlint/config-conventional"
-    required: true
   token:
     description: "GitHub personal access token for user who has the ability to comment on pull requests."
     required: true
-  invalidPrTitleMessagePath:
-    description: "Relative path to file containing message to send on pull request when pull request title is invalid."
-    required: false 
 runs:
   using: "node16"
   main: "dist/index.js"

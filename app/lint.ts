@@ -3,8 +3,10 @@ import { LintOptions, ParserOptions, QualifiedConfig } from "@commitlint/types"
 import load from "@commitlint/load"
 import * as log from "./log"
 
-export const lintPrTitle = async (title: string, rulesName: string): Promise<boolean> => {
+export const lintPrTitle = async (title: string, rulesName?: string): Promise<boolean> => {
   title = title.trim()
+  rulesName = rulesName || "@commitlint/config-conventional"
+
   if (title == "") return false
 
   log.debug(`Linting PR ${title} with rules: ${rulesName}`)

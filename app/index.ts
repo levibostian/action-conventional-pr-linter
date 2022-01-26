@@ -37,32 +37,26 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
   const prTitle = pullRequest.data.title
   const prAuthor = pullRequest.data.user?.login || ""
 
-  const isTitleValid = await lintPrTitle(prTitle, input.rules)
+  const isTitleValid = await lintPrTitle(prTitle, "@commitlint/config-conventional")
   if (!isTitleValid) {
-    await cathy.speak(
-      getInvalidPrTitleHelp(prAuthor, { filePath: input.invalidPrTitleMessagePath }),
-      {
-        githubToken: input.token,
-        githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
-        githubIssue: prNumber,
-        updateExisting: true,
-        updateID: "action-semantic-pr_help-pr-title"
-      }
-    )
-
-    return terminate(new Error("Pull request title is not valid."))
-  }
-
-  await cathy.speak(
-    getValidPrTitleMessage(prAuthor, { filePath: input.invalidPrTitleMessagePath }),
-    {
+    await cathy.speak(getInvalidPrTitleHelp(prAuthor), {
       githubToken: input.token,
       githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
       githubIssue: prNumber,
       updateExisting: true,
       updateID: "action-semantic-pr_help-pr-title"
-    }
-  )
+    })
+
+    return terminate(new Error("Pull request title is not valid."))
+  }
+
+  await cathy.speak(getValidPrTitleMessage(prAuthor), {
+    githubToken: input.token,
+    githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+    githubIssue: prNumber,
+    updateExisting: true,
+    updateID: "action-semantic-pr_help-pr-title"
+  })
 
   log.info("Looks like the PR title is valid!")
 
