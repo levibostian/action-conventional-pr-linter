@@ -1,3 +1,16 @@
+# 1.0.0 (2022-01-26)
+
+### Bug Fixes
+
+- adding label to merged pr ([2230661](https://github.com/levibostian/action-semantic-pr/commit/223066107e188755decd54c24d23c1181e374d77))
+
+### Features
+
+- give helpful messages in pr ([#2](https://github.com/levibostian/action-semantic-pr/issues/2)) ([390773a](https://github.com/levibostian/action-semantic-pr/commit/390773a00b5b0238347da9cd39202d0377e133b8))
+- lint PR title against rule set ([#1](https://github.com/levibostian/action-semantic-pr/issues/1)) ([3d0d97c](https://github.com/levibostian/action-semantic-pr/commit/3d0d97c6016dad0c9b98f7b272d9d7f51e115b31))
+- merge PR by adding label ([0ff85b7](https://github.com/levibostian/action-semantic-pr/commit/0ff85b75450c06be308ea68fde028b7d3c06cc82))
+- suggest if pr will make a new release ([712ce36](https://github.com/levibostian/action-semantic-pr/commit/712ce361ef7049dea123bbbb908d1e55bf6f8c02))
+
 ## [1.0.2](https://github.com/levibostian/action-node-blanky/compare/v1.0.1...v1.0.2) (2022-01-23)
 
 ### Bug Fixes
