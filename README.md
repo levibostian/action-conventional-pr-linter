@@ -1,60 +1,64 @@
-Latest (recommended) [![npm latest version](https://img.shields.io/npm/v/levibostian/action-node-blanky/latest.svg)](https://www.npmjs.com/package/levibostian/action-node-blanky)
-Beta: [![npm beta version](https://img.shields.io/npm/v/levibostian/action-node-blanky/beta.svg)](https://www.npmjs.com/package/levibostian/action-node-blanky)
-Alpha: [![npm alpha version](https://img.shields.io/npm/v/levibostian/action-node-blanky/alpha.svg)](https://www.npmjs.com/package/levibostian/action-node-blanky)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/levibostian/action-semantic-pr?label=latest%20stable%20release)
+![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/levibostian/action-semantic-pr?include_prereleases&label=latest%20pre-release%20version)
 
-# action-node-blanky
+# action-semantic-pr
 
-Opinionated boilerplate used to make and deploy GitHub actions using node.
+GitHub Action to help your project have successful pull requests that make [semantic-release](https://github.com/semantic-release/semantic-release) happy.
 
 # Features
 
-- Typescript
-- Jest tests
-- Continuous integration and continuous delivery
-  - Including convenient git tag updating. Example: When releasing v1.2.3, v1 will be created/updated to follow GitHub Action convention.
-  - Deployments will contain everything GitHub Actions requires including dependencies.
-- ESLint and Prettier
-- As slim as possible published Action to make your GitHub Action Workflow run ⚡ _fast_ ⚡. Dependencies are included in the release but only production related dependencies, not development. This means we don't need to check in out bulk `node_modules/` directory into our repo!
+- Lint pull request titles to see if they match a conventional commit spec.
+- If pull request title not valid, print a helpful message to PR author helping them out.
+- Squash pull requests making a valid commit that matches conventional commit spec.
+- Support for pull requests that add breaking changes to code base.
 
-When writing GitHub Actions, sometimes there are some inconveniences. This includes publishing `node_modules/` and compiled javascript. However, when we use a tool like Jest, this can be difficult because Jest can add _lots_ of dependencies to `node_modules/` making GitHub Actions that use our Action, slower. This project solves that problem by publishing git tags that are as small as possible to only include dependencies required by the Action without touching your development environment. Write code as you're used to. The deployment script will take care of the rest!
-
-# Goals of this project
-
-- Contain configuration files to setup all tools I tend to use in my development flow.
-- Start with zero dependencies. Your Action contains the dependencies you need, no more.
+_Note:_ At this time, this project only supports the [conventional-commits](https://www.conventionalcommits.org/) spec. If your project uses something else (Angular, Atom, etc) then this Action will not work for you. See [feature request](https://github.com/levibostian/action-semantic-pr/issues/8) to see how you can contribute to this project!
 
 # Getting started
 
-- Enable GitHub Actions for your repository.
-- If you have not done so already, create a GitHub account for bot purposes.
-- Add your bot account in the repository `/settings/access`.
-- Create secret `BOT_PUSH_TOKEN` with key being a GitHub personal access token with push permission so the bot can push to the repository (the bot will be making git tags and releases on repository).
+- Create your workflow
 
-# Notes
+```yml
+name: PR bot
 
-## node version
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize, labeled]
 
-Currently set to `node16`.
+jobs:
+  pr-help:
+    name: PR bot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manage PR bot
+        uses: levibostian/action-semantic-pr@v1
+        with:
+          token: ${{ secrets.PR_HELPER_BOT_TOKEN }}
+```
 
-To update the node version, change...
+- Create secret `PR_HELPER_BOT_TOKEN` with key being a GitHub personal access token with push permission. This bot will comment on pull requests and merge pull requests.
 
-- `.nvmrc`
-- `tsconfig.json` > `extends` bump to node version.
-- `.eslintrc.json` > `ecmaVersion` to version of node supported. This is easy to find by going into `tsconfig` and find what `target` is set.
-- `action.yml` > `runs.using` change node version.
+- Modify your semantic-release configuration file to use the `conventionalcommits` spec:
+
+```json
+{
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits"
+    }]
+  ]
+}
+```
+
+- Create pull requests! The bot will run and comment on your pull requests to lint PR titles and merge PRs.
 
 # Development
 
 - `npm install`
+- `npm test` to run automated tests
 
-- Find all the relevant tasks you need with: `npm run --tasks`
+At this time, the Action does not have a lot of automated tests written. Instead, the Action is tested by running the Action on pull requests on this repository. Therefore, modify `.github/workflows/test-action.yml` to make sure that it will run successfully to test the Action on this repository.
 
 # Deployment
 
-This project is setup with continuous deployment. When you deploy to `main`, `beta`, or `alpha` branches we will make a deployment. GitHub Actions are all deployed by simply making a GitHub tag/release.
-
-Tags/releases are made automatically using [semantic-release](https://github.com/semantic-release/semantic-release) as long as our git commit messages are written in the [conventional commit format](https://www.conventionalcommits.org/).
-
-# Credits
-
-- Inspiration for how to do compiling and testing action came from [this repo](https://github.com/actions/typescript-action). Great bas to start with that I added my own twists to (this repo _is_ opinionated after all).
+Appropriately, this project is deployed using [semantic-release](https://github.com/semantic-release/semantic-release) and the PR titles use the [conventional commit format](https://www.conventionalcommits.org/).
