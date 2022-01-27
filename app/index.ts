@@ -83,7 +83,10 @@ import {
   // Check if we should warn about the PR not being in the correct branch
   const parsedPrTitle = await parseTitle(prTitle)
   log.debug(`parsed PR title: ${JSON.stringify(parsedPrTitle)}`)
-  const allowedTypesForBranch: string[] = (input.branchTypeWarning[prToBrach] || "").split(",")
+  const allowedTypesForBranch: string[] = (input.branchTypeWarning[prToBrach] || "")
+    // by default, .split() makes ['']. we want to remove empty strings
+    .split(",")
+    .filter((item) => item.length > 0)
   log.debug(`allowed types for PR branch: ${prToBrach}, ${allowedTypesForBranch}`)
   if (allowedTypesForBranch.length > 0 && !allowedTypesForBranch.includes(parsedPrTitle.type!)) {
     log.info(`pull request type is not allowed to go into this branch. Going to make a warning.`)
