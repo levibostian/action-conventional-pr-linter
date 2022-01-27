@@ -43,12 +43,9 @@ jobs:
 ```json
 {
   "plugins": [
-    [
-      "@semantic-release/commit-analyzer",
-      {
-        "preset": "conventionalcommits"
-      }
-    ]
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits"
+    }]
   ]
 }
 ```

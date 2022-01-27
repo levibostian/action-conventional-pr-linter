@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "lint-staged": {
-    "*.{ts,js,json,css,md}": [
+    "*.{ts,js,json,css}": [
       "npm run format"
     ]
   },
