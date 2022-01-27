@@ -1,10 +1,14 @@
 import { getInput } from "./input"
-import { getNextReleaseType, lintPrTitle } from "./lint"
+import { getNextReleaseType, lintPrTitle, parseTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
 import * as cathy from "cathy"
-import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages"
+import {
+  getCommitTypeNotAllowedInBranchMessage,
+  getInvalidPrTitleHelp,
+  getValidPrTitleMessage
+} from "./helper_messages"
 ;(async () => {
   log.debug("Checking if action was triggered by a PR")
 
@@ -35,6 +39,7 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
 
   log.debug(`GitHub pull request: ${JSON.stringify(pullRequest.data)}`)
   const prTitle = pullRequest.data.title
+  const prFromBrach = pullRequest.data.head.ref // name of branch that made PR.
   const prAuthor = pullRequest.data.user?.login || ""
 
   const isTitleValid = await lintPrTitle(prTitle, "@commitlint/config-conventional")
@@ -74,6 +79,33 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
   )
 
   log.info("Looks like the PR title is valid!")
+
+  // Check if we should warn about the PR not being in the correct branch
+  const parsedPrTitle = await parseTitle(prTitle)
+  log.debug(`parsed PR title: ${JSON.stringify(parsedPrTitle)}`)
+  const allowedTypesForBranch: string[] = (input.branchTypeWarning[prFromBrach] || "").split(",")
+  log.debug(`allowed types for PR branch: ${prFromBrach}, ${allowedTypesForBranch}`)
+  if (allowedTypesForBranch.length > 0 && !allowedTypesForBranch.includes(parsedPrTitle.type!)) {
+    log.info(`pull request type is not allowed to go into this branch. Going to make a warning.`)
+
+    await cathy.speak(
+      getCommitTypeNotAllowedInBranchMessage({
+        author: prAuthor,
+        branchName: prFromBrach,
+        allowedTypes: allowedTypesForBranch,
+        givenType: parsedPrTitle.type!
+      }),
+      {
+        githubToken: input.token,
+        githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+        githubIssue: prNumber,
+        updateExisting: true,
+        updateID: "action-semantic-pr_commit-type-help"
+      }
+    )
+
+    // Do not terminate as the message of invalid type is just a warning. We can still try to merge it.
+  }
 
   // time to merge if we determine it's ready.
 

@@ -34,6 +34,8 @@ jobs:
         uses: levibostian/action-semantic-pr@v1
         with:
           token: ${{ secrets.PR_HELPER_BOT_TOKEN }}
+          # Sets rules on the types of commits allowed on a specific branch. Example: {"beta": "fix,docs"} gives a warning on the pull request if a pull request is made into the beta branch with a type thats not fix or docs.
+          branchTypeWarning: '{"beta": "fix", "main": "fix"}'
 ```
 
 - Create secret `PR_HELPER_BOT_TOKEN` with key being a GitHub personal access token with push permission. This bot will comment on pull requests and merge pull requests.

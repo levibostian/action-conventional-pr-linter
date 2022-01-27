@@ -4,6 +4,9 @@ import load from "@commitlint/load"
 import * as log from "./log"
 import { ReleaseType } from "./type/release_type"
 import commitAnalyzer from "@semantic-release/commit-analyzer"
+import conventionalCommitsPreset from "conventional-changelog-conventionalcommits"
+import parser from "conventional-commits-parser"
+import { Commit } from "conventional-commits-parser"
 
 export const lintPrTitle = async (title: string, rulesName?: string): Promise<boolean> => {
   title = title.trim()
@@ -51,4 +54,11 @@ export const getNextReleaseType = async (prTitle: string): Promise<ReleaseType> 
   )
 
   return result
+}
+
+export const parseTitle = async (prTitle: string): Promise<Commit> => {
+  const preset = await conventionalCommitsPreset()
+  const rules = preset.parserOpts
+
+  return parser.sync(prTitle, rules)
 }

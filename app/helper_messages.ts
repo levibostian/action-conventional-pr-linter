@@ -46,3 +46,19 @@ export const getValidPrTitleMessage = (
 
   return getMessage(templateArgs, filePath)
 }
+
+export interface CommitTypeNotAllowedTemplateArgs {
+  author: string
+  branchName: string
+  allowedTypes: string[]
+  givenType: string
+}
+
+export const getCommitTypeNotAllowedInBranchMessage = (
+  args: CommitTypeNotAllowedTemplateArgs,
+  options?: { filePath?: string }
+): string => {
+  const filePath = options?.filePath || "assets/commit_type_not_allowed_branch.md"
+
+  return getMessage(args, filePath)
+}
