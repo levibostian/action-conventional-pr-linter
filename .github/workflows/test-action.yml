@@ -22,11 +22,12 @@ jobs:
         run: npm ci
       - name: Compile action before testing it 
         run: npm run compile
-      - name: Install @commitlint/config-angular to test custom rules work
+      - name: Install @commitlint/config-angular to test custom rules work # this feature is not yet implemented to do this. 
         run: npm i @commitlint/config-angular
       # Thanks: https://github.com/actions/typescript-action/blob/b4f07da86601110b682c6f45ff575f5fbd0f8cdf/.github/workflows/test.yml#L18      
       - name: Test Action
         uses: ./ 
         with:
           token: ${{ secrets.COMMENT_BOT_TOKEN }}
-          rules: "@commitlint/config-angular"
+          rules: "@commitlint/config-angular" # this feature is not yet implemented to do this. 
+          branchTypeWarning: '{"beta": "fix", "main": "fix"}' # develop allows more, but this is just to be able to test it. 
