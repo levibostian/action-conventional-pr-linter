@@ -104,11 +104,11 @@ import { getInvalidPrTitleHelp, getValidPrTitleMessage } from "./helper_messages
     commit_message: "", // in the future, we can populate this with breaking changes.
     merge_method: "squash"
   })
-  await octokit.rest.issues.addLabels({
+  await octokit.rest.issues.removeLabel({
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     issue_number: prNumber,
-    labels: ["Merged by action-semantic-pr"]
+    name: "Ready to merge"
   })
 
   terminate()
