@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/levibostian/action-semantic-pr/compare/v1.0.0...v1.1.0) (2022-01-27)
+
+
+### Features
+
+* remove labels after merge to clean up PRs ([5509c71](https://github.com/levibostian/action-semantic-pr/commit/5509c71ee375c4a9fab9f4b67ae542c945403996))
+
 # 1.0.0 (2022-01-26)
 
 ### Bug Fixes

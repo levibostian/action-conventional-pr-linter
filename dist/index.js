@@ -88478,11 +88478,11 @@ require("./sourcemap-register.js")
           commit_message: "",
           merge_method: "squash"
         })
-        await octokit.rest.issues.addLabels({
+        await octokit.rest.issues.removeLabel({
           owner: github_1.context.repo.owner,
           repo: github_1.context.repo.repo,
           issue_number: prNumber,
-          labels: ["Merged by action-semantic-pr"]
+          name: "Ready to merge"
         })
         ;(0, env_1.terminate)()
       })()
