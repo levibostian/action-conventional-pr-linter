@@ -44,7 +44,7 @@
     "@commitlint/lint": "^16.0.0",
     "@commitlint/load": "^16.1.0",
     "@semantic-release/commit-analyzer": "^9.0.2",
-    "cathy": "^1.0.0",
+    "cathy": "^1.0.1",
     "conventional-changelog-conventionalcommits": "^4.6.3",
     "conventional-commits-parser": "^3.2.4",
     "string-format": "^2.0.0"
