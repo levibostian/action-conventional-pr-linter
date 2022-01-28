@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/levibostian/action-semantic-pr/compare/v1.1.0...v1.2.0) (2022-01-28)
+
+
+### Bug Fixes
+
+* commenting on pr doesn't duplicate messages ([a2d16f8](https://github.com/levibostian/action-semantic-pr/commit/a2d16f81b2634c08c43a19d4dc92ad9c3a243d92))
+
+
+### Features
+
+* give warning if change not allowed in branch ([becfda2](https://github.com/levibostian/action-semantic-pr/commit/becfda2cf204b97b8603bab99610e111896f4401))
+
 # [1.1.0](https://github.com/levibostian/action-semantic-pr/compare/v1.0.0...v1.1.0) (2022-01-27)
 
 
