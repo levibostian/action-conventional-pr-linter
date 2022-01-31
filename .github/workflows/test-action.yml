@@ -25,6 +25,8 @@ jobs:
       - name: Install @commitlint/config-angular to test custom rules work # this feature is not yet implemented to do this. 
         run: npm i @commitlint/config-angular
       # Thanks: https://github.com/actions/typescript-action/blob/b4f07da86601110b682c6f45ff575f5fbd0f8cdf/.github/workflows/test.yml#L18      
+      - name: Make environment more realistic to running action on project 
+        run: rm -rf node_modules/
       - name: Test Action
         uses: ./ 
         with:
