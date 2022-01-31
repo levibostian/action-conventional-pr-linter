@@ -4,9 +4,6 @@ describe("lintPrTitle", () => {
   it(`given empty string, expect false`, async () => {
     expect(await lint.lintPrTitle("")).toEqual(false)
   })
-  it(`given invalid rules set, expect false`, async () => {
-    expect(await lint.lintPrTitle("feat: foo", "@commitlint/invalid-config")).toEqual(false)
-  })
   it(`given invalid title, expect false`, async () => {
     expect(await lint.lintPrTitle("foo: bar")).toEqual(false)
   })

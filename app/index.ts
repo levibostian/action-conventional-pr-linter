@@ -42,7 +42,7 @@ import {
   const prToBrach = pullRequest.data.base.ref // name of branch that you're trying to merge into
   const prAuthor = pullRequest.data.user?.login || ""
 
-  const isTitleValid = await lintPrTitle(prTitle, "@commitlint/config-conventional")
+  const isTitleValid = await lintPrTitle(prTitle)
   if (!isTitleValid) {
     await cathy.speak(
       getInvalidPrTitleHelp({
