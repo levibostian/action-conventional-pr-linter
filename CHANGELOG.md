@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/levibostian/action-semantic-pr/compare/v1.2.0...v1.2.1) (2022-01-31)
+
+
+### Bug Fixes
+
+* commitlint loading rules ([56b4a02](https://github.com/levibostian/action-semantic-pr/commit/56b4a023b74950c1fe253cd03233ad6ee3884f08))
+
 # [1.2.0](https://github.com/levibostian/action-semantic-pr/compare/v1.1.0...v1.2.0) (2022-01-28)
 
 
