@@ -7,6 +7,7 @@ import commitAnalyzer from "@semantic-release/commit-analyzer"
 import conventionalCommitsPreset from "conventional-changelog-conventionalcommits"
 import parser from "conventional-commits-parser"
 import { Commit } from "conventional-commits-parser"
+import "@commitlint/config-conventional" // make sure that the rules are loaded into the compiled JS.
 
 export const lintPrTitle = async (title: string, rulesName?: string): Promise<boolean> => {
   title = title.trim()
