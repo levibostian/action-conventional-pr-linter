@@ -7,7 +7,6 @@ import commitAnalyzer from "@semantic-release/commit-analyzer"
 import conventionalCommitsPreset from "conventional-changelog-conventionalcommits"
 import parser from "conventional-commits-parser"
 import { Commit } from "conventional-commits-parser"
-import commitLintConventionalConfig from "@commitlint/config-conventional"
 
 export const lintPrTitle = async (title: string): Promise<boolean> => {
   title = title.trim()
@@ -33,11 +32,10 @@ export const lintPrTitle = async (title: string): Promise<boolean> => {
     log.error(`Rules set ${rulesName} not able to be loaded. Not able to lint PR title without it.`)
     return false
   }
-  const preset = await conventionalCommitsPreset()
   const opts: LintOptions = {
-    parserOpts: preset.parserOpts as ParserOptions
+    parserOpts: loadedRules.parserPreset.parserOpts as ParserOptions
   }
-  const lintResult = await lint(title, commitLintConventionalConfig.rules, opts)
+  const lintResult = await lint(title, loadedRules.rules, opts)
 
   log.debug(`Linting result: ${JSON.stringify(lintResult)}`)
 
