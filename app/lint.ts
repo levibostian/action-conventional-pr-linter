@@ -1,6 +1,6 @@
 import lint from "@commitlint/lint"
-import { LintOptions, ParserOptions } from "@commitlint/types"
-//import load from "@commitlint/load"
+import { LintOptions, ParserOptions, QualifiedConfig } from "@commitlint/types"
+import load from "@commitlint/load"
 import * as log from "./log"
 import { ReleaseType } from "./type/release_type"
 import commitAnalyzer from "@semantic-release/commit-analyzer"
@@ -17,22 +17,22 @@ export const lintPrTitle = async (title: string): Promise<boolean> => {
 
   log.debug(`Linting PR ${title} with rules: ${rulesName}`)
 
-  // // Using load() to get more accurate rules sets such as ! for breaking changes.
-  // // https://github.com/conventional-changelog/commitlint/issues/2226#issuecomment-777207848
-  // let loadedRules: QualifiedConfig | undefined
-  // try {
-  //   // load throws if can't find the rules to load
-  //   loadedRules = await load({
-  //     extends: [rulesName]
-  //   })
-  // } catch {
-  //   return false
-  // }
+  // Using load() to get more accurate rules sets such as ! for breaking changes.
+  // https://github.com/conventional-changelog/commitlint/issues/2226#issuecomment-777207848
+  let loadedRules: QualifiedConfig | undefined
+  try {
+    // load throws if can't find the rules to load
+    loadedRules = await load({
+      extends: [rulesName]
+    })
+  } catch {
+    return false
+  }
 
-  // if (!loadedRules || !loadedRules.parserPreset) {
-  //   log.error(`Rules set ${rulesName} not able to be loaded. Not able to lint PR title without it.`)
-  //   return false
-  // }
+  if (!loadedRules || !loadedRules.parserPreset) {
+    log.error(`Rules set ${rulesName} not able to be loaded. Not able to lint PR title without it.`)
+    return false
+  }
   const preset = await conventionalCommitsPreset()
   const opts: LintOptions = {
     parserOpts: preset.parserOpts as ParserOptions

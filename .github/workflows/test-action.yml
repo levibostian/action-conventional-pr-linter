@@ -24,9 +24,11 @@ jobs:
         run: npm run compile
       - name: Install @commitlint/config-angular to test custom rules work # this feature is not yet implemented to do this. 
         run: npm i @commitlint/config-angular
-      # Thanks: https://github.com/actions/typescript-action/blob/b4f07da86601110b682c6f45ff575f5fbd0f8cdf/.github/workflows/test.yml#L18      
+      # I have been getting false positives when running action in project when node_modules/
+      # exists. We can `npm ci` above but when action runs in other projects, that dir will not exist. 
       - name: Make environment more realistic to running action on project 
         run: rm -rf node_modules/
+      # Thanks: https://github.com/actions/typescript-action/blob/b4f07da86601110b682c6f45ff575f5fbd0f8cdf/.github/workflows/test.yml#L18      
       - name: Test Action
         uses: ./ 
         with:

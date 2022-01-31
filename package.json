@@ -5,7 +5,7 @@
     "test": "npx jest",
     "format": "npx prettier --write \"{app,tests}/**/*.ts\"",
     "lint": "npx eslint --fix --ext ts,js . && npx tsc --noEmit",
-    "compile": "rm -rf dist/ && npx ncc build app/index.ts --source-map -o dist && cp -r app/assets/ dist/assets/ && cd dist/ && mkdir node_modules && npm i conventional-changelog-conventionalcommits",
+    "compile": "./scripts/compile.sh",
     "prepare": "husky install"
   },
   "license": "MIT",
