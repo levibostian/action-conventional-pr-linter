@@ -20,6 +20,6 @@ cp -r app/assets/ dist/assets/
 # 
 # Future releases of commit-analyzer might not use importFrom package: https://github.com/semantic-release/commit-analyzer/pull/297#issuecomment-996926823 
 # which might fix this. 
-cd dist/ && mkdir node_modules 
-npm i conventional-changelog-conventionalcommits
-cd ..
+# cd dist/ && mkdir node_modules 
+# npm i conventional-changelog-conventionalcommits
+# cd ..

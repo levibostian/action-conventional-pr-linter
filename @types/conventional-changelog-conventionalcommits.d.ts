@@ -5,3 +5,5 @@
 // because the package is very simple.
 
 declare module "conventional-changelog-conventionalcommits"
+
+declare module "conventional-changelog-preset-loader"
