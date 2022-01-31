@@ -5,7 +5,7 @@
     "test": "npx jest",
     "format": "npx prettier --write \"{app,tests}/**/*.ts\"",
     "lint": "npx eslint --fix --ext ts,js . && npx tsc --noEmit",
-    "compile": "rm -rf dist/ && npx ncc build app/index.ts --source-map -o dist && cp -r app/assets/ dist/assets/",
+    "compile": "./scripts/compile.sh",
     "prepare": "husky install"
   },
   "license": "MIT",
@@ -42,7 +42,6 @@
     "@actions/github": "^5.0.0",
     "@commitlint/config-conventional": "^16.0.0",
     "@commitlint/lint": "^16.0.0",
-    "@commitlint/load": "^16.1.0",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "cathy": "^1.0.1",
     "conventional-changelog-conventionalcommits": "^4.6.3",
