@@ -15,7 +15,7 @@ interface Spec {
 
 const getSpec = async (type: string): Promise<Spec> => {
   if (type == "conventionalcommits") {
-    const spec = await (await conventionCommitsSpec())()
+    const spec = await conventionCommitsSpec()
     return {
       rules: commitLintConventionalConfig.rules,
       parserOpts: spec.parserOpts,
