@@ -1,12 +1,12 @@
 import lint from "@commitlint/lint"
-import { LintOptions, ParserOptions, QualifiedConfig } from "@commitlint/types"
-import load from "@commitlint/load"
+import { LintOptions, ParserOptions } from "@commitlint/types"
 import * as log from "./log"
 import { ReleaseType } from "./type/release_type"
 import commitAnalyzer from "@semantic-release/commit-analyzer"
 import conventionalCommitsPreset from "conventional-changelog-conventionalcommits"
 import parser from "conventional-commits-parser"
 import { Commit } from "conventional-commits-parser"
+import commitLintConventionalConfig from "@commitlint/config-conventional"
 
 export const lintPrTitle = async (title: string): Promise<boolean> => {
   title = title.trim()
@@ -16,26 +16,14 @@ export const lintPrTitle = async (title: string): Promise<boolean> => {
 
   log.debug(`Linting PR ${title} with rules: ${rulesName}`)
 
-  // Using load() to get more accurate rules sets such as ! for breaking changes.
-  // https://github.com/conventional-changelog/commitlint/issues/2226#issuecomment-777207848
-  let loadedRules: QualifiedConfig | undefined
-  try {
-    // load throws if can't find the rules to load
-    loadedRules = await load({
-      extends: [rulesName]
-    })
-  } catch {
-    return false
-  }
-
-  if (!loadedRules || !loadedRules.parserPreset) {
-    log.error(`Rules set ${rulesName} not able to be loaded. Not able to lint PR title without it.`)
-    return false
-  }
+  // In the past, I have used @commitlint/load to load rules + parserPresets
+  // but was not able to get it working when using ncc.
+  // https://github.com/levibostian/action-semantic-pr/blob/a2d16f81b2634c08c43a19d4dc92ad9c3a243d92/app/lint.ts#L19-L38
+  const preset = await conventionalCommitsPreset()
   const opts: LintOptions = {
-    parserOpts: loadedRules.parserPreset.parserOpts as ParserOptions
+    parserOpts: preset.parserOpts as ParserOptions
   }
-  const lintResult = await lint(title, loadedRules.rules, opts)
+  const lintResult = await lint(title, commitLintConventionalConfig.rules, opts)
 
   log.debug(`Linting result: ${JSON.stringify(lintResult)}`)
 

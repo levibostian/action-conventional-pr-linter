@@ -22,5 +22,4 @@ cp -r app/assets/ dist/assets/
 # which might fix this. 
 cd dist/ && mkdir node_modules 
 npm i conventional-changelog-conventionalcommits
-npm i @commitlint/config-conventional
 cd ..
