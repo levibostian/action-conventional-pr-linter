@@ -3,7 +3,8 @@ import * as core from "@actions/core"
 
 export const getInput = (): Input => {
   const rawInput: Input = {
-    token: core.getInput("token"),
+    readToken: core.getInput("readToken"),
+    writeToken: core.getInput("writeToken"),
     branchTypeWarning: JSON.parse(core.getInput("branchTypeWarning"))
   }
 

@@ -30,8 +30,16 @@ import {
   }
   log.debug(`Action running against PR ${prNumber}`)
 
-  const octokit = getOctokit(input.token)
-  const pullRequest = await octokit.rest.pulls.get({
+  if (!input.readToken) {
+    return terminate("I think you forgot to set a secret for `readToken` Action input?")
+  }
+  if (!input.writeToken) {
+    return terminate("I think you forgot to set a secret for `writeToken` Action input?")
+  }
+
+  const readOnlyOctokit = getOctokit(input.readToken)
+
+  const pullRequest = await readOnlyOctokit.rest.pulls.get({
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     pull_number: prNumber
@@ -49,7 +57,7 @@ import {
         author: prAuthor
       }),
       {
-        githubToken: input.token,
+        githubToken: input.readToken,
         githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
         githubIssue: prNumber,
         updateExisting: true,
@@ -70,7 +78,7 @@ import {
       nextReleaseType
     }),
     {
-      githubToken: input.token,
+      githubToken: input.readToken,
       githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
       githubIssue: prNumber,
       updateExisting: true,
@@ -99,7 +107,7 @@ import {
         givenType: parsedPrTitle.type!
       }),
       {
-        githubToken: input.token,
+        githubToken: input.readToken,
         githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
         githubIssue: prNumber,
         updateExisting: true,
@@ -130,8 +138,14 @@ import {
     return terminate()
   }
 
+  // Here, we have safely entered the part of the code where we can perform write operations.
+  // The PR is ready to merge once someone who has write access to the repository has
+  // approved of the pull request (by adding a label to the PR).
+
+  const writeAccessOctokit = getOctokit(input.writeToken)
+
   log.info("Merging PR")
-  await octokit.rest.pulls.merge({
+  await writeAccessOctokit.rest.pulls.merge({
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     pull_number: prNumber,
@@ -139,7 +153,7 @@ import {
     commit_message: "", // in the future, we can populate this with breaking changes.
     merge_method: "squash"
   })
-  await octokit.rest.issues.removeLabel({
+  await writeAccessOctokit.rest.issues.removeLabel({
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     issue_number: prNumber,

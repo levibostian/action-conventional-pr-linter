@@ -1,4 +1,5 @@
 export interface Input {
-  token: string
+  readToken: string
+  writeToken: string
   branchTypeWarning: { [key: string]: string }
 }

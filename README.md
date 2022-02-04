@@ -33,12 +33,17 @@ jobs:
       - name: Manage PR bot
         uses: levibostian/action-semantic-pr@v1
         with:
-          token: ${{ secrets.PR_HELPER_BOT_TOKEN }}
+          readToken: ${{ secrets.READ_ONLY_BOT_TOKEN }}
+          writeToken: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}
           # Sets rules on the types of commits allowed on a specific branch. Example: {"beta": "fix,docs"} gives a warning on the pull request if a pull request is made into the beta branch with a type thats not fix or docs.
           branchTypeWarning: '{"beta": "fix", "main": "fix"}'
 ```
 
-- Create secret `PR_HELPER_BOT_TOKEN` with key being a GitHub personal access token with push permission. This bot will comment on pull requests and merge pull requests.
+- Create secret `WRITE_ACCESS_BOT_TOKEN` with a GitHub personal access token. The GitHub account the access token belongs to needs to have write access to the GitHub repository. This means the account is added as a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) in your public or private GitHub account. 
+
+- Create secret `READ_ONLY_BOT_TOKEN` with a GitHub personal access token. If this Action is installed in a *private* GitHub repository, the token can be the same token used for `WRITE_ACCESS_BOT_TOKEN`. If this Action is installed in a *public* GitHub repository, for security reasons, make sure that (1) the GitHub account that this access token belongs to is *not* added as a collaborator on *any* GitHub repositories and (2) the access token that you generate for `READ_ONLY_BOT_TOKEN` has `public_repo` scope, only. [Learn more](https://danger.systems/js/guides/getting_started.html#setting-up-an-access-token). 
+
+- Create secret `READ_ONLY_BOT_TOKEN` with key being a GitHub personal access token with push permission. This bot will comment on pull requests and merge pull requests.
 
 - Modify your semantic-release configuration file to use the `conventionalcommits` spec:
 
@@ -47,7 +52,10 @@ jobs:
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "preset": "conventionalcommits"
-    }]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits"
+    }],
   ]
 }
 ```
