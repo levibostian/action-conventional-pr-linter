@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Manage PR bot
-        uses: levibostian/action-semantic-pr@v1
+        uses: levibostian/action-semantic-pr@v2
         with:
           readToken: ${{ secrets.READ_ONLY_BOT_TOKEN }}
           writeToken: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}
