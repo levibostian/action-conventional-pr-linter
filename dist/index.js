@@ -43801,8 +43801,18 @@ require("./sourcemap-register.js")
           return (0, env_1.terminate)()
         }
         log.debug(`Action running against PR ${prNumber}`)
-        const octokit = (0, github_1.getOctokit)(input.token)
-        const pullRequest = await octokit.rest.pulls.get({
+        if (!input.readToken) {
+          return (0, env_1.terminate)(
+            "I think you forgot to set a secret for `readToken` Action input?"
+          )
+        }
+        if (!input.writeToken) {
+          return (0, env_1.terminate)(
+            "I think you forgot to set a secret for `writeToken` Action input?"
+          )
+        }
+        const readOnlyOctokit = (0, github_1.getOctokit)(input.readToken)
+        const pullRequest = await readOnlyOctokit.rest.pulls.get({
           owner: github_1.context.repo.owner,
           repo: github_1.context.repo.repo,
           pull_number: prNumber
@@ -43818,7 +43828,7 @@ require("./sourcemap-register.js")
               author: prAuthor
             }),
             {
-              githubToken: input.token,
+              githubToken: input.readToken,
               githubRepo: `${github_1.context.repo.owner}/${github_1.context.repo.repo}`,
               githubIssue: prNumber,
               updateExisting: true,
@@ -43836,7 +43846,7 @@ require("./sourcemap-register.js")
             nextReleaseType
           }),
           {
-            githubToken: input.token,
+            githubToken: input.readToken,
             githubRepo: `${github_1.context.repo.owner}/${github_1.context.repo.repo}`,
             githubIssue: prNumber,
             updateExisting: true,
@@ -43867,7 +43877,7 @@ require("./sourcemap-register.js")
               givenType: parsedPrTitle.type
             }),
             {
-              githubToken: input.token,
+              githubToken: input.readToken,
               githubRepo: `${github_1.context.repo.owner}/${github_1.context.repo.repo}`,
               githubIssue: prNumber,
               updateExisting: true,
@@ -43892,8 +43902,12 @@ require("./sourcemap-register.js")
           log.info("PR title valid, but not ready to merge. Nothing else for me to do, exiting.")
           return (0, env_1.terminate)()
         }
+        // Here, we have safely entered the part of the code where we can perform write operations.
+        // The PR is ready to merge once someone who has write access to the repository has
+        // approved of the pull request (by adding a label to the PR).
+        const writeAccessOctokit = (0, github_1.getOctokit)(input.writeToken)
         log.info("Merging PR")
-        await octokit.rest.pulls.merge({
+        await writeAccessOctokit.rest.pulls.merge({
           owner: github_1.context.repo.owner,
           repo: github_1.context.repo.repo,
           pull_number: prNumber,
@@ -43901,7 +43915,7 @@ require("./sourcemap-register.js")
           commit_message: "",
           merge_method: "squash"
         })
-        await octokit.rest.issues.removeLabel({
+        await writeAccessOctokit.rest.issues.removeLabel({
           owner: github_1.context.repo.owner,
           repo: github_1.context.repo.repo,
           issue_number: prNumber,
@@ -43962,7 +43976,8 @@ require("./sourcemap-register.js")
       const core = __importStar(__nccwpck_require__(2186))
       const getInput = () => {
         const rawInput = {
-          token: core.getInput("token"),
+          readToken: core.getInput("readToken"),
+          writeToken: core.getInput("writeToken"),
           branchTypeWarning: JSON.parse(core.getInput("branchTypeWarning"))
         }
         const branchTypeWarningObject = rawInput.branchTypeWarning || {}

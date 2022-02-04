@@ -1,3 +1,14 @@
+## [2.0.0](https://github.com/levibostian/action-semantic-pr/compare/v1.2.1...v2.0.0) (2022-02-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* setup action with a read-only and a write github token
+
+### Code Refactoring
+
+* setup action with a read-only and a write github token ([71bf698](https://github.com/levibostian/action-semantic-pr/commit/71bf698c8b72a90cc9d46d23b66246a9b3978a10))
+
 ## [1.2.1](https://github.com/levibostian/action-semantic-pr/compare/v1.2.0...v1.2.1) (2022-01-31)
 
 
