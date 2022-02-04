@@ -33,4 +33,4 @@ jobs:
             @semantic-release/git@10
             @semantic-release/github@8
         env:
-          GITHUB_TOKEN: ${{ secrets.BOT_PUSH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}

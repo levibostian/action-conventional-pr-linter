@@ -30,6 +30,13 @@ import {
   }
   log.debug(`Action running against PR ${prNumber}`)
 
+  if (!input.readToken) {
+    return terminate("I think you forgot to set a secret for `readToken` Action input?")
+  }
+  if (!input.writeToken) {
+    return terminate("I think you forgot to set a secret for `writeToken` Action input?")
+  }
+
   const readOnlyOctokit = getOctokit(input.readToken)
 
   const pullRequest = await readOnlyOctokit.rest.pulls.get({
