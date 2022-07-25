@@ -57,8 +57,11 @@ export const getValidPrTitleMessage = (
   else if (args.nextReleaseType == "minor") nextReleaseExample = "1.1.0"
   else if (args.nextReleaseType == "patch") nextReleaseExample = "1.0.1"
 
+  const isBreakingChange = args.nextReleaseType == "major"
+
   const templateArgs = {
     willCauseReleaseDescription: args.willCauseRelease ? "cause" : "not cause",
+    isBreakingChangeDescription: isBreakingChange ? "is" : "is not",
     nextReleaseExample,
     ...args
   }
