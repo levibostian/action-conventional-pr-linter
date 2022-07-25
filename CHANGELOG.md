@@ -1,3 +1,10 @@
+## [2.1.0](https://github.com/levibostian/action-semantic-pr/compare/v2.0.0...v2.1.0) (2022-07-25)
+
+
+### Features
+
+* introduce footer to be more helpful for beginners ([234adf7](https://github.com/levibostian/action-semantic-pr/commit/234adf72a6c1a5f8e7c24b84703396c8aa38743f))
+
 ## [2.0.0](https://github.com/levibostian/action-semantic-pr/compare/v1.2.1...v2.0.0) (2022-02-04)
 
 

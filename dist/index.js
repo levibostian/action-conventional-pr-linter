@@ -43700,16 +43700,31 @@ require("./sourcemap-register.js")
       const fs_1 = __nccwpck_require__(7147)
       const path_1 = __importDefault(__nccwpck_require__(1017))
       const string_format_1 = __importDefault(__nccwpck_require__(3259))
-      const getMessage = (args, relativeFilePath) => {
-        const fileTemplate = (0, fs_1.readFileSync)(
-          path_1.default.join(__dirname, relativeFilePath),
-          { encoding: "utf-8" }
+      const getMessage = (
+        args,
+        relativeFilePath,
+        footerArgs = { includedFooterDropdownOpened: "" }
+      ) => {
+        const fileString = (0, string_format_1.default)(
+          (0, fs_1.readFileSync)(path_1.default.join(__dirname, relativeFilePath), {
+            encoding: "utf-8"
+          }),
+          args
         )
-        return (0, string_format_1.default)(fileTemplate, args)
+        const footerString = (0, string_format_1.default)(
+          (0, fs_1.readFileSync)(path_1.default.join(__dirname, "assets/footer.md"), {
+            encoding: "utf-8"
+          }),
+          footerArgs
+        )
+        const combinedStrings = fileString + "\n\n" + footerString
+        return (0, string_format_1.default)(combinedStrings, args)
       }
       const getInvalidPrTitleHelp = (args, options) => {
         const filePath = options?.filePath || "assets/invalid_pr_title_help.md"
-        return getMessage(args, filePath)
+        return getMessage(args, filePath, {
+          includedFooterDropdownOpened: "open"
+        })
       }
       exports.getInvalidPrTitleHelp = getInvalidPrTitleHelp
       const getValidPrTitleMessage = (args, options) => {
@@ -43718,8 +43733,10 @@ require("./sourcemap-register.js")
         if (args.nextReleaseType == "major") nextReleaseExample = "2.0.0"
         else if (args.nextReleaseType == "minor") nextReleaseExample = "1.1.0"
         else if (args.nextReleaseType == "patch") nextReleaseExample = "1.0.1"
+        const isBreakingChange = args.nextReleaseType == "major"
         const templateArgs = {
           willCauseReleaseDescription: args.willCauseRelease ? "cause" : "not cause",
+          isBreakingChangeDescription: isBreakingChange ? "is" : "is not",
           nextReleaseExample,
           ...args
         }
