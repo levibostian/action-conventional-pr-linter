@@ -10,16 +10,11 @@ jobs:
     name: Test Action
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Read .nvmrc
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
-        id: nvm
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
-      - name: Install dependencies
-        run: npm ci
+          node-version-file: '.nvmrc'
+      - run: npm ci
       - name: Compile action before testing it 
         run: npm run compile
       - name: Install @commitlint/config-angular to test custom rules work # this feature is not yet implemented to do this. 

@@ -1,26 +1,26 @@
 name: Deploy action
+
 on:
   push:
     branches: [main, beta, alpha]
+
+permissions: read-all
 
 jobs:
   deploy:
     name: Deploy git tags
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # push git commits/releases 
+      issues: write # comments on issues 
     steps:
-      - uses: actions/checkout@v2
-      - name: Read .nvmrc
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
-        id: nvm
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
-      - name: Install dependencies for building 
-        run: npm ci
-      - name: Compile 
-        run: npm run compile 
-      # Perform git related tasks inside of semantic-release because `git config user...` is already setup. It's easier to run commands in there with exec plugin.
+          node-version-file: '.nvmrc'
+      - run: npm ci
+      - run: npm run compile 
+
       - name: Deploy via semantic release 
         uses: cycjimmy/semantic-release-action@v2
         with: 
@@ -32,11 +32,3 @@ jobs:
             @semantic-release/changelog@6
             @semantic-release/git@10
             @semantic-release/github@8
-        env:
-          GITHUB_TOKEN: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}
-      - name: Copy commits into develop after main deployment 
-        uses: levibostian/action-sync-branches@v1
-        with:
-          behind: develop
-          ahead: main 
-          githubToken: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}
