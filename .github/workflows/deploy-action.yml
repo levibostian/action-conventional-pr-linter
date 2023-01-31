@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write # push git commits/releases 
       issues: write # comments on issues 
+      pull-requests: write # comment on PRs 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -32,3 +33,5 @@ jobs:
             @semantic-release/changelog@6
             @semantic-release/git@10
             @semantic-release/github@8
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
