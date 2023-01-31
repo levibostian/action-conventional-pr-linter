@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/levibostian/action-semantic-pr/compare/v2.1.0...v3.0.0) (2023-01-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove merge feature (#22)
+
+### Features
+
+* remove merge feature ([#22](https://github.com/levibostian/action-semantic-pr/issues/22)) ([649d4bc](https://github.com/levibostian/action-semantic-pr/commit/649d4bce14fd8790dcc06e47f28ad3fe03737257))
+
 ## [2.1.0](https://github.com/levibostian/action-semantic-pr/compare/v2.0.0...v2.1.0) (2022-07-25)
 
 
