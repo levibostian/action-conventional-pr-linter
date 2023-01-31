@@ -43823,6 +43823,11 @@ require("./sourcemap-register.js")
             "I think you forgot to set a secret for `readToken` Action input?"
           )
         }
+        if (!input.writeToken) {
+          return (0, env_1.terminate)(
+            "I think you forgot to set a secret for `writeToken` Action input?"
+          )
+        }
         const readOnlyOctokit = (0, github_1.getOctokit)(input.readToken)
         const pullRequest = await readOnlyOctokit.rest.pulls.get({
           owner: github_1.context.repo.owner,
@@ -43898,7 +43903,47 @@ require("./sourcemap-register.js")
           )
           // Do not terminate as the message of invalid type is just a warning. We can still try to merge it.
         }
+        // time to merge if we determine it's ready.
+        if (pullRequest.data.merged || pullRequest.data.closed_at) {
+          log.info("Pull request is not open. Nothing else for me to do, existing.")
+          return (0, env_1.terminate)()
+        }
+        // check labels to see if it's ready to be merged
+        let isReadyToMerge = false
+        pullRequest.data.labels.forEach((label) => {
+          if (label.name == "Ready to merge") {
+            isReadyToMerge = true
+          }
+        })
+        if (!isReadyToMerge) {
+          log.info("PR title valid, but not ready to merge. Nothing else for me to do, exiting.")
+          return (0, env_1.terminate)()
+        }
+        // Here, we have safely entered the part of the code where we can perform write operations.
+        // The PR is ready to merge once someone who has write access to the repository has
+        // approved of the pull request (by adding a label to the PR).
+        const writeAccessOctokit = (0, github_1.getOctokit)(input.writeToken)
+        log.info("Merging PR")
+        await writeAccessOctokit.rest.pulls.merge({
+          owner: github_1.context.repo.owner,
+          repo: github_1.context.repo.repo,
+          pull_number: prNumber,
+          commit_title: prTitle,
+          commit_message: "",
+          merge_method: "squash"
+        })
+        await writeAccessOctokit.rest.issues.removeLabel({
+          owner: github_1.context.repo.owner,
+          repo: github_1.context.repo.repo,
+          issue_number: prNumber,
+          name: "Ready to merge"
+        })
+        ;(0, env_1.terminate)()
       })()
+      // const output: Output = {
+      //   text: getOutputText(input.text)
+      // }
+      // setOutput(output)
 
       /***/
     },
@@ -43949,6 +43994,7 @@ require("./sourcemap-register.js")
       const getInput = () => {
         const rawInput = {
           readToken: core.getInput("readToken"),
+          writeToken: core.getInput("writeToken"),
           branchTypeWarning: JSON.parse(core.getInput("branchTypeWarning"))
         }
         const branchTypeWarningObject = rawInput.branchTypeWarning || {}
