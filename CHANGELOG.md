@@ -1,3 +1,10 @@
+## [3.1.0](https://github.com/levibostian/action-semantic-pr/compare/v3.0.0...v3.1.0) (2023-04-03)
+
+
+### Features
+
+* create reusable workflow repos can reference ([#24](https://github.com/levibostian/action-semantic-pr/issues/24)) ([03d2197](https://github.com/levibostian/action-semantic-pr/commit/03d219794d140de8de5f2ec47c8b20fc5d13a816))
+
 ## [3.0.0](https://github.com/levibostian/action-semantic-pr/compare/v2.1.0...v3.0.0) (2023-01-31)
 
 
