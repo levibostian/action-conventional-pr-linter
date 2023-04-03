@@ -7,8 +7,6 @@ on:
 
 jobs:
   lint-pull-request-title-conventional-commits:
-    permissions:
-      pull-requests: write # required 
     runs-on: ubuntu-latest
     steps:
     - name: Lint pull request title to assert it uses conventional commits
