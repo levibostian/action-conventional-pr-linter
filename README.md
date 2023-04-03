@@ -16,6 +16,26 @@ _Note:_ At this time, this project only supports the [conventional-commits](http
 
 # Getting started
 
+You have 2 options: 
+
+### 1. Use reusable workflow if all you need is to lint the pull request titles
+
+```yaml
+name: PR linter
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize, labeled]
+
+jobs:
+  lint-pr-title:
+    uses: levibostian/action-semantic-pr/.github/workflows/sharable-workflow.yml@v3
+    permissions:
+      pull-requests: write
+```
+
+### 2. Use Action if you need other features 
+
 - Create your workflow
 
 ```yml
@@ -29,18 +49,16 @@ jobs:
   pr-help:
     name: PR bot
     runs-on: ubuntu-latest
+    permissions:
+      pull-request: write # github requires write permission when adding comments to an issue or pull request 
     steps:
       - name: Manage PR bot
-        uses: levibostian/action-semantic-pr@v2
+        uses: levibostian/action-semantic-pr@v3
         with:
-          readToken: ${{ secrets.READ_ONLY_BOT_TOKEN }}
+          readToken: ${{ secrets.GITHUB_TOKEN }}
           # Sets rules on the types of commits allowed on a specific branch. Example: {"beta": "fix,docs"} gives a warning on the pull request if a pull request is made into the beta branch with a type thats not fix or docs.
           branchTypeWarning: '{"beta": "fix", "main": "fix"}'
 ```
-
-- Create secret `READ_ONLY_BOT_TOKEN` with a GitHub personal access token. If this Action is installed in a *private* GitHub repository, the token can be the same token used for `WRITE_ACCESS_BOT_TOKEN`. If this Action is installed in a *public* GitHub repository, for security reasons, make sure that (1) the GitHub account that this access token belongs to is *not* added as a collaborator on *any* GitHub repositories and (2) the access token that you generate for `READ_ONLY_BOT_TOKEN` has `public_repo` scope, only. [Learn more](https://danger.systems/js/guides/getting_started.html#setting-up-an-access-token). 
-
-- Create secret `READ_ONLY_BOT_TOKEN` with key being a GitHub personal access token with push permission. This bot will comment on pull requests and merge pull requests.
 
 - Modify your semantic-release configuration file to use the `conventionalcommits` spec:
 
