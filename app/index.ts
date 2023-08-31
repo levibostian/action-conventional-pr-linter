@@ -5,7 +5,6 @@ import { terminate } from "./env"
 import * as log from "./log"
 import * as cathy from "cathy"
 import { getInvalidPrTitleHelp } from "./helper_messages"
-
 ;(async () => {
   log.debug("Checking if action was triggered by a PR")
 
@@ -53,8 +52,8 @@ import { getInvalidPrTitleHelp } from "./helper_messages"
       }
     )
 
-    return terminate(new Error("Pull request title is not valid."))
+    return terminate(new Error(`Pull request title, ${prTitle}, is not valid.`))
   }
 
-  log.info("Looks like the PR title is valid!")
+  log.info(`Looks like the PR title, ${prTitle}, is valid!`)
 })()
