@@ -9,8 +9,6 @@ GitHub Action to help your project have successful pull requests that make [sema
 
 - Lint pull request titles to see if they match a conventional commit spec.
 - If pull request title not valid, print a helpful message to PR author helping them out.
-- Squash pull requests making a valid commit that matches conventional commit spec.
-- Support for pull requests that add breaking changes to code base.
 
 _Note:_ At this time, this project only supports the [conventional-commits](https://www.conventionalcommits.org/) spec. If your project uses something else (Angular, Atom, etc) then this Action will not work for you. See [feature request](https://github.com/levibostian/action-semantic-pr/issues/8) to see how you can contribute to this project!
 
@@ -34,7 +32,7 @@ jobs:
       pull-requests: write
 ```
 
-### 2. Use Action if you need other features 
+### 2. Use Action 
 
 - Create your workflow
 
@@ -52,27 +50,8 @@ jobs:
     permissions:
       pull-request: write # github requires write permission when adding comments to an issue or pull request 
     steps:
-      - name: Manage PR bot
+      - name: Lint PR title 
         uses: levibostian/action-semantic-pr@v3
-        with:
-          readToken: ${{ secrets.GITHUB_TOKEN }}
-          # Sets rules on the types of commits allowed on a specific branch. Example: {"beta": "fix,docs"} gives a warning on the pull request if a pull request is made into the beta branch with a type thats not fix or docs.
-          branchTypeWarning: '{"beta": "fix", "main": "fix"}'
-```
-
-- Modify your semantic-release configuration file to use the `conventionalcommits` spec:
-
-```json
-{
-  "plugins": [
-    ["@semantic-release/commit-analyzer", {
-      "preset": "conventionalcommits"
-    }],
-    ["@semantic-release/release-notes-generator", {
-      "preset": "conventionalcommits"
-    }],
-  ]
-}
 ```
 
 - Create pull requests! The bot will run and comment on your pull requests to lint PR titles and merge PRs.
