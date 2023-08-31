@@ -1,4 +1,4 @@
-import { getInput } from "./input"
+/* import { getInput } from "./input"
 import { getNextReleaseType, lintPrTitle, parseTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
@@ -115,3 +115,4 @@ import {
     // Do not terminate as the message of invalid type is just a warning. We can still try to merge it.
   }
 })()
+ */
