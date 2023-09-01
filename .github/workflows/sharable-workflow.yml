@@ -11,5 +11,3 @@ jobs:
     steps:
     - name: Lint pull request title to assert it uses conventional commits
       uses: levibostian/action-semantic-pr@v3
-      with:
-        readToken: ${{ github.token }}

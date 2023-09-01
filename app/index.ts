@@ -1,14 +1,10 @@
-import { getInput } from "./input"
-import { getNextReleaseType, lintPrTitle, parseTitle } from "./lint"
+import { inputs } from "./input"
+import { lintPrTitle } from "./lint"
 import { context as githubContext, getOctokit } from "@actions/github"
 import { terminate } from "./env"
 import * as log from "./log"
 import * as cathy from "cathy"
-import {
-  getCommitTypeNotAllowedInBranchMessage,
-  getInvalidPrTitleHelp,
-  getValidPrTitleMessage
-} from "./helper_messages"
+import { getInvalidPrTitleHelp } from "./helper_messages"
 ;(async () => {
   log.debug("Checking if action was triggered by a PR")
 
@@ -20,7 +16,6 @@ import {
   }
 
   log.debug("Getting input and context from action")
-  const input = getInput()
   const prNumber = githubContext.payload.pull_request?.number
   if (!prNumber) {
     log.info(
@@ -30,13 +25,9 @@ import {
   }
   log.debug(`Action running against PR ${prNumber}`)
 
-  if (!input.readToken) {
-    return terminate("I think you forgot to set a secret for `readToken` Action input?")
-  }
+  const octokit = getOctokit(inputs.token)
 
-  const readOnlyOctokit = getOctokit(input.readToken)
-
-  const pullRequest = await readOnlyOctokit.rest.pulls.get({
+  const pullRequest = await octokit.rest.pulls.get({
     owner: githubContext.repo.owner,
     repo: githubContext.repo.repo,
     pull_number: prNumber
@@ -44,7 +35,6 @@ import {
 
   log.debug(`GitHub pull request: ${JSON.stringify(pullRequest.data)}`)
   const prTitle = pullRequest.data.title
-  const prToBrach = pullRequest.data.base.ref // name of branch that you're trying to merge into
   const prAuthor = pullRequest.data.user?.login || ""
 
   const isTitleValid = await lintPrTitle(prTitle)
@@ -54,7 +44,7 @@ import {
         author: prAuthor
       }),
       {
-        githubToken: input.readToken,
+        githubToken: inputs.token,
         githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
         githubIssue: prNumber,
         updateExisting: true,
@@ -62,56 +52,8 @@ import {
       }
     )
 
-    return terminate(new Error("Pull request title is not valid."))
+    return terminate(new Error(`Pull request title, ${prTitle}, is not valid.`))
   }
 
-  const nextReleaseType = await getNextReleaseType(prTitle)
-  const willCauseRelease = nextReleaseType != undefined
-
-  await cathy.speak(
-    getValidPrTitleMessage({
-      author: prAuthor,
-      willCauseRelease,
-      nextReleaseType
-    }),
-    {
-      githubToken: input.readToken,
-      githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
-      githubIssue: prNumber,
-      updateExisting: true,
-      updateID: "action-semantic-pr_help-pr-title"
-    }
-  )
-
-  log.info("Looks like the PR title is valid!")
-
-  // Check if we should warn about the PR not being in the correct branch
-  const parsedPrTitle = await parseTitle(prTitle)
-  log.debug(`parsed PR title: ${JSON.stringify(parsedPrTitle)}`)
-  const allowedTypesForBranch: string[] = (input.branchTypeWarning[prToBrach] || "")
-    // by default, .split() makes ['']. we want to remove empty strings
-    .split(",")
-    .filter((item) => item.length > 0)
-  log.debug(`allowed types for PR branch: ${prToBrach}, ${allowedTypesForBranch}`)
-  if (allowedTypesForBranch.length > 0 && !allowedTypesForBranch.includes(parsedPrTitle.type!)) {
-    log.info(`pull request type is not allowed to go into this branch. Going to make a warning.`)
-
-    await cathy.speak(
-      getCommitTypeNotAllowedInBranchMessage({
-        author: prAuthor,
-        branchName: prToBrach,
-        allowedTypes: allowedTypesForBranch,
-        givenType: parsedPrTitle.type!
-      }),
-      {
-        githubToken: input.readToken,
-        githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
-        githubIssue: prNumber,
-        updateExisting: true,
-        updateID: "action-semantic-pr_commit-type-help"
-      }
-    )
-
-    // Do not terminate as the message of invalid type is just a warning. We can still try to merge it.
-  }
+  log.info(`Looks like the PR title, ${prTitle}, is valid!`)
 })()

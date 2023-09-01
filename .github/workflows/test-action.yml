@@ -1,7 +1,6 @@
 name: Test Action 
 
 on:
-  push: # test on push the action ignores request. 
   pull_request: # test that we can edit the PR title to re-run the action
     types: [opened, reopened, edited, synchronize, labeled]
 
@@ -9,6 +8,8 @@ jobs:
   test:
     name: Test Action
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # to comment 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -17,17 +18,11 @@ jobs:
       - run: npm ci
       - name: Compile action before testing it 
         run: npm run compile
-      - name: Install @commitlint/config-angular to test custom rules work # this feature is not yet implemented to do this. 
-        run: npm i @commitlint/config-angular
+
       # I have been getting false positives when running action in project when node_modules/
       # exists. We can `npm ci` above but when action runs in other projects, that dir will not exist. 
       - name: Make environment more realistic to running action on project 
         run: rm -rf node_modules/
-      # Thanks: https://github.com/actions/typescript-action/blob/b4f07da86601110b682c6f45ff575f5fbd0f8cdf/.github/workflows/test.yml#L18      
+
       - name: Test Action
-        uses: ./ 
-        with:
-          readToken: ${{ secrets.READ_ONLY_BOT_TOKEN }}
-          writeToken: ${{ secrets.WRITE_ACCESS_BOT_TOKEN }}
-          # rules: "@commitlint/config-angular" # this feature is not yet implemented to do this. 
-          branchTypeWarning: '{"beta": "fix", "main": "fix"}' # develop allows more, but this is just to be able to test it. 
+        uses: ./
