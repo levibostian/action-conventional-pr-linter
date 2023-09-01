@@ -1,5 +1,5 @@
-name: "Semantic PR"
-description: "Helps ensure that pull requests will be merged and creates the desired outcome of semantic-release. "
+name: "conventional pull request linter"
+description: "GitHub Action that lints pull request titles to assert it conforms to a conventional changelog spec. Great companion to tools such as semantic-release to feel more confident in merging a PR."
 author: "levibostian"
 inputs: 
  token:
