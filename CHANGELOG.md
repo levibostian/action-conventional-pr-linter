@@ -1,3 +1,14 @@
+## [4.0.0](https://github.com/levibostian/action-semantic-pr/compare/v3.1.0...v4.0.0) (2023-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* make action more focused by removing irrelevant features (#29)
+
+### Features
+
+* make action more focused by removing irrelevant features ([#29](https://github.com/levibostian/action-semantic-pr/issues/29)) ([212fd32](https://github.com/levibostian/action-semantic-pr/commit/212fd32769aece808f8ef58fffeb698080e7acb9))
+
 ## [3.1.0](https://github.com/levibostian/action-semantic-pr/compare/v3.0.0...v3.1.0) (2023-04-03)
 
 
