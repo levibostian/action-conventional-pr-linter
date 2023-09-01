@@ -26,8 +26,10 @@ jobs:
         uses: cycjimmy/semantic-release-action@v2
         with: 
           # version numbers below can be in many forms: M, M.m, M.m.p
+          # Hard-coding version as workaround https://github.com/semantic-release/commit-analyzer/issues/517#issuecomment-1697193361
           semantic_version: 18
           extra_plugins: |
+            conventional-changelog-conventionalcommits@6.1.0 
             @semantic-release/commit-analyzer@9
             @semantic-release/release-notes-generator@10
             @semantic-release/changelog@6
