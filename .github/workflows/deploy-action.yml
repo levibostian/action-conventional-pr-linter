@@ -3,11 +3,10 @@ name: Deploy action
 on:
   push:
     branches: [main, beta, alpha]
-
-permissions: read-all
+  workflow_dispatch: # allow manually deploying from Actions tab
 
 jobs:
-  deploy:
+  deploy-git-tag-and-release:
     name: Deploy git tags
     runs-on: ubuntu-latest
     permissions:
@@ -37,3 +36,12 @@ jobs:
             @semantic-release/github@8
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  major-version-bump:
+    runs-on: ubuntu-latest
+    needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
+    permissions:
+      contents: write # so it can push a tag
+    steps:
+      # Will automatically release vX for major releases after each deployment
+      - uses: Actions-R-Us/actions-tagger@v2
