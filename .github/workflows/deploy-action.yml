@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # push git commits/releases 
-      issues: write # comments on issues 
-      pull-requests: write # comment on PRs 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -22,26 +20,20 @@ jobs:
       - run: npm run compile 
 
       - name: Deploy via semantic release 
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v4
         with: 
-          # version numbers below can be in many forms: M, M.m, M.m.p
-          # Hard-coding version as workaround https://github.com/semantic-release/commit-analyzer/issues/517#issuecomment-1697193361
-          semantic_version: 18
           extra_plugins: |
             conventional-changelog-conventionalcommits@6.1.0 
-            @semantic-release/commit-analyzer@9
-            @semantic-release/release-notes-generator@10
-            @semantic-release/changelog@6
-            @semantic-release/git@10
-            @semantic-release/github@8
+            @semantic-release/git
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  major-version-bump:
+  major-version-bump: # update major version tags (ex: v1, v2, v3, etc.)
     runs-on: ubuntu-latest
     needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
     permissions:
       contents: write # so it can push a tag
     steps:
-      # Will automatically release vX for major releases after each deployment
-      - uses: Actions-R-Us/actions-tagger@v2
+      - uses: levibostian/action-bump-major-tag@v1
+        with:
+          tag-prefix: "v"
