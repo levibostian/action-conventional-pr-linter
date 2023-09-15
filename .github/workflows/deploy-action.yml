@@ -31,10 +31,7 @@ jobs:
   major-version-bump: # update major version tags (ex: v1, v2, v3, etc.)
     runs-on: ubuntu-latest
     needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
-    permissions:
-      contents: write # so it can push git tags
     steps:
-      - uses: actions/checkout@v4
       - uses: levibostian/action-bump-major-tag@v1
         with:
           tag-prefix: "v"
