@@ -32,9 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
     permissions:
-      contents: write # so it can push a tag
+      contents: write # so it can push git tags
     steps:
+      - uses: actions/checkout@v4
       - uses: levibostian/action-bump-major-tag@v1
         with:
           tag-prefix: "v"
-          token: ${{ secrets.GITHUB_TOKEN }}
