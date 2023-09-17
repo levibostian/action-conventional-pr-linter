@@ -1,39 +1,40 @@
 name: Deploy action
 
-on:
-  push:
-    branches: [main, beta, alpha]
-  workflow_dispatch: # allow manually deploying from Actions tab
+on: [pull_request]
+  # push:
+  #   branches: [main, beta, alpha]
+  # workflow_dispatch: # allow manually deploying from Actions tab
 
 jobs:
-  deploy-git-tag-and-release:
-    name: Deploy git tags
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # push git commits/releases 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run compile 
+  # deploy-git-tag-and-release:
+  #   name: Deploy git tags
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write # push git commits/releases 
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version-file: '.nvmrc'
+  #     - run: npm ci
+  #     - run: npm run compile 
 
-      - name: Deploy via semantic release 
-        uses: cycjimmy/semantic-release-action@v4
-        with: 
-          extra_plugins: |
-            conventional-changelog-conventionalcommits@6.1.0 
-            @semantic-release/git
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Deploy via semantic release 
+  #       uses: cycjimmy/semantic-release-action@v4
+  #       with: 
+  #         extra_plugins: |
+  #           conventional-changelog-conventionalcommits@6.1.0 
+  #           @semantic-release/git
+  #       env: 
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   major-version-bump: # update major version tags (ex: v1, v2, v3, etc.)
     runs-on: ubuntu-latest
-    needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
+    # needs: deploy-git-tag-and-release # to wait for new git tag to be made. 
     permissions:
       contents: write # push git commits/releases
     steps:
+      - uses: actions/checkout@v4
       - uses: levibostian/action-bump-major-tag@try-git-commands
         with:
-          tag-prefix: "v"
+          tag-prefix: "v"          
