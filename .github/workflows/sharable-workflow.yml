@@ -6,8 +6,8 @@ on:
   workflow_call: 
 
 jobs:
-  lint-pull-request-title-conventional-commits:
+  lint-pull-request-title:
     runs-on: ubuntu-latest
     steps:
     - name: Lint pull request title to assert it uses conventional commits
-      uses: levibostian/action-semantic-pr@v3
+      uses: levibostian/action-conventional-pr-linter@v4
