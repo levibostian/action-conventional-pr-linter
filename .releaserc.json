@@ -19,15 +19,9 @@
       }
     ],
     [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md"
-      }
-    ],
-    [
       "@semantic-release/git",
       {
-        "assets": ["dist", "CHANGELOG.md"],
+        "assets": ["dist"],
         "message": "chore: ${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],

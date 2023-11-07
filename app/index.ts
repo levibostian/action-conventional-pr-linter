@@ -53,6 +53,13 @@ import { getInvalidPrTitleHelp } from "./helper_messages"
     )
 
     return terminate(new Error(`Pull request title, ${prTitle}, is not valid.`))
+  } else {
+    await cathy.remove({
+      githubToken: inputs.token,
+      githubRepo: `${githubContext.repo.owner}/${githubContext.repo.repo}`,
+      githubIssue: prNumber,
+      updateID: "action-semantic-pr_help-pr-title"
+    })
   }
 
   log.info(`Looks like the PR title, ${prTitle}, is valid!`)

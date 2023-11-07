@@ -22,8 +22,9 @@ jobs:
       - name: Deploy via semantic release 
         uses: cycjimmy/semantic-release-action@v4
         with: 
+          semantic_version: latest
           extra_plugins: |
-            conventional-changelog-conventionalcommits@6.1.0 
+            conventional-changelog-conventionalcommits
             @semantic-release/git
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
