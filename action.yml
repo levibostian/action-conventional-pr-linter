@@ -6,7 +6,7 @@ inputs:
     description: "A GitHub token used for making requests to Github's API"
     default: ${{ github.token }}
 runs:
-  using: "node16"
+  using: "node20"
   main: "dist/index.js"
 branding:
   icon: 'check'  
